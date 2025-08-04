@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById("userInput").value;
+            const response = await fetch("", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": getCookie('csrftoken')
+                },
+                body: "message=" + encodeURIComponent(message)
+            });
+            const data = await response.json();
+            document.getElementById("chatbox").innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+            document.getElementById("chatbox").innerHTML += `<p><strong>Bot:</strong> ${data.response}</p>`;
+            document.getElementById("userInput").value = "";
+        }
+
+        function getCookie(name) {
+            const value = "; " + document.cookie;
+            const parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+    </script>
+</head>
+<body>
+    <h2>Chat with Bot</h2>
+    <div id="chatbox" style="border:1px solid #ccc; padding:10px; width:300px; height:200px; overflow:auto;"></div>
+    <br>
+    <input type="text" id="userInput" placeholder="Type a message">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
